@@ -38,3 +38,11 @@ def gaussian_kernel(ksize, sigma=1):
     norm = sigma * np.sqrt(2 * np.pi)
     result = np.exp(-np.square(distances) / (2 * sigma ** 2)) / norm
     return result / np.max(result)
+
+def weighted_std_filter(spectrum):
+    M = spectrum.shape[1]
+    S = M / 4
+    norm = np.exp(np.square(np.arange(M) - (M / 2)) / np.square(S))
+    spectrum -= np.mean(spectrum, axis=1, keepdims=True)
+    res = np.sqrt(np.sum(np.square(spectrum) / norm, axis=1))
+    return np.repeat(res.reshape(-1, 1), M, axis=1)
